@@ -1,0 +1,35 @@
+name: Neural Core Metrics
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+  push:
+    branches:
+    - main
+
+jobs:
+  github-metrics:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: System Uptime & Core Diagnostics
+        uses: lowlighter/metrics@latest
+        with:
+          filename: dist/neural-metrics.svg
+          token: ${{ secrets.METRICS_TOKEN }}
+          base: header, activity, community, repositories, metadata
+          config_timezone: Asia/Kolkata
+          plugin_isocalendar: yes
+          plugin_isocalendar_duration: full-year
+          plugin_languages: yes
+          plugin_languages_ignored: html, css
+          plugin_languages_details: bytes-size, percentage
+          # Space/Neon Dark Theme
+          config_padding: 0, 8 + 11%
+          config_order: base.header, isocalendar, languages, base.activity, base.community, base.repositories
+          # Custom colors to match the Mission Control theme
+          output_action: commit
+          committer_branch: output
+          committer_message: "chore: update Neural Core Metrics"
